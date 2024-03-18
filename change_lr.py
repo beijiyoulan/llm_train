@@ -57,12 +57,12 @@ bnb_config = BitsAndBytesConfig(
 
 # 加载模型和分词器
 model = AutoModelForCausalLM.from_pretrained(
-    model_id,
+    pretrained_model_name_or_path="/home/kyds/finetune/hf_hub/hf_hub/models--openlm-research--open_llama_3b",
     device_map="cuda:0",
     torch_dtype=torch.bfloat16,
     quantization_config=bnb_config
 )
-tokenizer = AutoTokenizer.from_pretrained(model_id)
+tokenizer = AutoTokenizer.from_pretrained("/home/kyds/finetune/hf_hub/hf_hub/models--openlm-research--open_llama_3b")
 tokenizer.padding_side = 'right'
 
 # 设置聊天模板
