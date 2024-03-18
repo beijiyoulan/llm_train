@@ -48,7 +48,7 @@ eval_dataset = load_dataset("json", data_files="hospital_test.json", split="trai
 
 
 # Hugging Face模型ID
-model_id = "TinyLlama/TinyLlama-1.1B-intermediate-step-480k-1T" 
+model_id = "openlm-research/open_llama_3b" 
 
 # BitsAndBytesConfig配置
 bnb_config = BitsAndBytesConfig(
@@ -58,7 +58,7 @@ bnb_config = BitsAndBytesConfig(
 # 加载模型和分词器
 model = AutoModelForCausalLM.from_pretrained(
     model_id,
-    device_map="auto",
+    device_map="cuda:0",
     torch_dtype=torch.bfloat16,
     quantization_config=bnb_config
 )
@@ -91,7 +91,7 @@ while learning_rate <= 0.01:  # 直到达到最大学习率为止
     # 更新学习率参数
     args = TrainingArguments(
         output_dir="model",  # 保存模型的目录
-        num_train_epochs=1,  # 训练轮数
+        num_train_epochs=8,  # 训练轮数
         per_device_train_batch_size=2,  # 每个设备的批次大小
         gradient_accumulation_steps=2,  # 进行反向传播/更新步骤之前的步骤数
         gradient_checkpointing=True,  # 使用梯度检查点来节省内存
@@ -155,7 +155,6 @@ while learning_rate <= 0.01:  # 直到达到最大学习率为止
 	  torch_dtype=torch.float16
     )
     pipe = pipeline("text-generation", model=test_model, tokenizer=tokenizer)
-
 
 
     success_rate = []
